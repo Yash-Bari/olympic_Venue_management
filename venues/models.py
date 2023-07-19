@@ -12,7 +12,7 @@ class Venue(models.Model):
 
     def predict_sustainability(self):
         # Load the data from the CSV file
-        df = pd.read_csv(r'C:\Users\Yash\sustainability_venue_app\venues\Sustain.csv')  # Replace with the correct path to your CSV file
+        df = pd.read_csv('Sustain.csv')  # Replace with the correct path to your CSV file
 
         # Convert the user input to lowercase
         user_name = self.name.lower()
