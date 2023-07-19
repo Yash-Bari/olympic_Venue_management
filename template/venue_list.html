@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Venues</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <style>
+        body {
+            background-color: #1c1b1b;
+            font-family: Arial, sans-serif;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333333;
+            animation: fadeIn 1s ease-in;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+        }
+        
+        td {
+            border-bottom: 1px solid #cccccc;
+        }
+        
+        tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .no-venues {
+            text-align: center;
+            font-style: italic;
+            color: #999999;
+        }
+        
+        .add-venue-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #337ab7;
+            font-weight: bold;
+            animation: heartBeat 1s infinite;
+        }
+        
+        .delete-button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #c62828;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .delete-button:hover {
+            background-color: #971b1b;
+        }
+        
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+        
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes heartBeat {
+            0%,
+            100% {
+                transform: scale(1);
+            }
+        
+            14%,
+            28%,
+            42% {
+                transform: scale(1.3);
+            }
+        
+            70% {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="animate__animated animate__fadeIn">Venues</h1>
+        
+        <table class="animate__animated animate__fadeIn">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Location</th>
+                    <th>Sustainability Facilities</th>
+                    <th>Sustainability Score</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for venue in venues %}
+                    <tr>
+                        <td>{{ venue.name }}</td>
+                        <td>{{ venue.location }}</td>
+                        <td>{{ venue.sustainability_facilities }}</td>
+                        <td>{{ venue.sustainability_score }}</td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="4" class="no-venues">No venues available.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" name="delete" class="delete-button" onclick="return confirm('Are you sure you want to delete all venues?')">Clear Table</button>
+        </form>
+        
+        <a href="{% url 'venues:add_venue' %}" class="add-venue-link animate__animated animate__heartBeat">Search Venue</a>
+    </div>
+</body>
+</html>
