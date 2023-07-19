@@ -28,7 +28,7 @@ def add_venue(request):
         form = VenueForm()
 
     # Load the events and locations from the CSV file
-    df = pd.read_csv(r'C:\Users\Yash\sustainability_venue_app\venues\Sustain.csv')  # Replace with the correct path to your CSV file
+    df = pd.read_csv('Sustain.csv')  # Replace with the correct path to your CSV file
     events = df['Event'].unique().tolist()
     locations = df['Location'].unique().tolist()
 
