@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from .forms import VenueForm
 from .models import Venue
-
-from django.shortcuts import render, redirect
-from .models import Venue
+import pandas as pd
+import requests
+from io import StringIO
 
 def venue_list(request):
     venues = Venue.objects.all()
@@ -15,8 +15,6 @@ def venue_list(request):
 
     return render(request, 'venue_list.html', {'venues': venues})
 
-import pandas as pd
-
 def add_venue(request):
     if request.method == 'POST':
         form = VenueForm(request.POST)
@@ -27,10 +25,21 @@ def add_venue(request):
     else:
         form = VenueForm()
 
-    # Load the events and locations from the CSV file
-    df = pd.read_csv('olympic_Venue_management/venues/Sustain.csv')  # Replace with the correct path to your CSV file
-    events = df['Event'].unique().tolist()
-    locations = df['Location'].unique().tolist()
+    # URL of the CSV file on GitHub
+    csv_url = 'https://raw.githubusercontent.com/Yash-Bari/dataset/main/Sustain.csv'
 
-    return render(request, 'add_venue.html', {'form': form, 'events': events, 'locations': locations})
+    # Fetch the data from the URL using requests
+    response = requests.get(csv_url)
+    if response.status_code == 200:
+        # Read the CSV data from the response content
+        csv_content = response.content.decode('utf-8')
+        df = pd.read_csv(StringIO(csv_content))
 
+        events = df['Event'].unique().tolist()
+        locations = df['Location'].unique().tolist()
+
+        return render(request, 'add_venue.html', {'form': form, 'events': events, 'locations': locations})
+    else:
+        print(f"Failed to fetch CSV data. Status Code: {response.status_code}")
+        # If fetching data fails, you can still render the form with empty events and locations
+        return render(request, 'add_venue.html', {'form': form, 'events': [], 'locations': []})
